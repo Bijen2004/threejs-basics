@@ -6,12 +6,59 @@ const Cube = ({position,size,color})=>{
   const ref = useRef()
   useFrame((state,delta)=>{
     ref.current.rotation.x += delta
+    ref.current.rotation.y += delta*2
+    ref.current.position.z = Math.sin(state.clock.elapsedTime)*2
   })
   return(
 <mesh position={position} ref={ref}>
           <boxGeometry args={size}/>
           <meshStandardMaterial color={color}/>
         </mesh>
+  )
+}
+
+const Sphere=({position,size,color})=>{
+  const ref = useRef()
+  useFrame((state,delta)=>{
+    ref.current.rotation.x += delta
+    ref.current.rotation.y += delta*2
+    ref.current.position.z = Math.sin(state.clock.elapsedTime)*2
+  })
+  return(
+    <mesh position={position} ref={ref}>
+      <sphereGeometry args={size}/>
+      <meshStandardMaterial color={color}/>
+    </mesh>
+  )
+}
+
+const Torus=({position,size,color})=>{
+  const ref = useRef()
+  useFrame((state,delta)=>{
+    ref.current.rotation.x += delta
+    ref.current.rotation.y += delta*2
+    ref.current.position.z = Math.sin(state.clock.elapsedTime)*2
+  })
+  return(
+    <mesh position={position} ref={ref}>
+      <torusGeometry args={size}/>
+      <meshStandardMaterial color={color}/>
+    </mesh>
+  )
+}
+
+const TorusKnot=({position,size,color})=>{
+  const ref = useRef()
+  useFrame((state,delta)=>{
+    ref.current.rotation.x += delta
+    ref.current.rotation.y += delta*2
+    ref.current.position.z = Math.sin(state.clock.elapsedTime)*2
+  })
+  return(
+    <mesh position={position} ref={ref}>
+      <torusKnotGeometry args={size}/>
+      <meshStandardMaterial color={color}/>
+    </mesh>
   )
 }
 
@@ -29,9 +76,11 @@ const page = () => {
         <Cube position={[-1,2,0]} color={'blue'} size={[1,1,1]}/>
       </group>     */}
 
-      <Cube position={[0,0,0]} size={[3,3,3]} color={'orange'}/>
+      {/* <Cube position={[0,0,0]} size={[1,1,1]} color={'orange'}/> */}
         
-
+        <Sphere position={[0,0,0]} size={[1,30,30]} color={'red'}/>
+        <Torus position={[2,0,0]} size={[0.8,0.1,30,30]} color={'blue'}/>
+        <TorusKnot position={[-2,0,0]} size={[0.5,0.1,1000,50]} color={'yellow'}/>
 
       </Canvas>
     </div>
