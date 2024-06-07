@@ -1,6 +1,6 @@
 'use client'
 import { Canvas, useFrame } from '@react-three/fiber'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
 const Cube = ({position,size,color})=>{
   const ref = useRef()
@@ -19,15 +19,21 @@ const Cube = ({position,size,color})=>{
 
 const Sphere=({position,size,color})=>{
   const ref = useRef()
+  const [isHovered,setIsHovered] = useState(false)
+  const [isClicked,setIsClicked] = useState(false)
   useFrame((state,delta)=>{
-    ref.current.rotation.x += delta
-    ref.current.rotation.y += delta*2
-    ref.current.position.z = Math.sin(state.clock.elapsedTime)*2
+    const speed = isHovered?1:0.2
+    ref.current.rotation.y += delta*speed
   })
   return(
-    <mesh position={position} ref={ref}>
+    <mesh position={position} ref={ref} 
+    onPointerEnter={(event)=>(event.stopPropagation(),setIsHovered(true))}
+    onPointerLeave={()=>setIsHovered(false)}
+    onClick={()=>setIsClicked(!isClicked)}
+    scale={isClicked?2:1}
+    >
       <sphereGeometry args={size}/>
-      <meshStandardMaterial color={color}/>
+      <meshStandardMaterial color={isHovered? 'red':'blue'} wireframe/>
     </mesh>
   )
 }
@@ -78,9 +84,9 @@ const page = () => {
 
       {/* <Cube position={[0,0,0]} size={[1,1,1]} color={'orange'}/> */}
         
-        <Sphere position={[0,0,0]} size={[1,30,30]} color={'red'}/>
-        <Torus position={[2,0,0]} size={[0.8,0.1,30,30]} color={'blue'}/>
-        <TorusKnot position={[-2,0,0]} size={[0.5,0.1,1000,50]} color={'yellow'}/>
+        <Sphere position={[0,0,0]} size={[1,30,30]}/>
+        {/* <Torus position={[2,0,0]} size={[0.8,0.2,30,30]} color={'blue'}/>
+        <TorusKnot position={[-2,0,0]} size={[0.5,0.1,1000,50]} color={'yellow'}/> */}
 
       </Canvas>
     </div>
