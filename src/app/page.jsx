@@ -1,6 +1,7 @@
 'use client'
 import { MeshWobbleMaterial, OrbitControls, useHelper } from '@react-three/drei'
 import { Canvas, useFrame } from '@react-three/fiber'
+import { useControls } from 'leva'
 import React, { useRef, useState } from 'react'
 import {DirectionalLightHelper} from 'three'
 
@@ -42,6 +43,9 @@ const Sphere=({position,size,color})=>{
 
 const Torus=({position,size,color})=>{
   const ref = useRef()
+
+
+
   useFrame((state,delta)=>{
     ref.current.rotation.x += delta
     ref.current.rotation.y += delta*2
@@ -55,8 +59,21 @@ const Torus=({position,size,color})=>{
   )
 }
 
-const TorusKnot=({position,size,color})=>{
+const TorusKnot=({position,size})=>{
   const ref = useRef()
+
+
+  const{color,radius} = useControls({
+    color:'lightblue',
+    radius:{
+      value:5,
+      min:1,
+      max:10,
+      step:0.5
+    }
+
+  })
+
   // useFrame((state,delta)=>{
   //   ref.current.rotation.x += delta
   //   ref.current.rotation.y += delta*2
@@ -64,8 +81,8 @@ const TorusKnot=({position,size,color})=>{
   // })
   return(
     <mesh position={position} ref={ref}>
-      <torusKnotGeometry args={size}/>
-      <MeshWobbleMaterial factor={10} speed={2}/>
+      <torusKnotGeometry args={[radius,...size]}/>
+      <MeshWobbleMaterial factor={10} speed={2} color={color}/>
     </mesh>
   )
 }
@@ -73,11 +90,22 @@ const TorusKnot=({position,size,color})=>{
 const Scene = ()=>{
 
   const directionalLightRef = useRef()
+
+  // const {lightColor,lightIntensity} = useControls({
+  //   lightColor:'#21c8db',
+  //   lightIntensity:{
+  //     value:0.5,
+  //     min:0,
+  //     max:5,
+  //   }
+  // })
   useHelper(directionalLightRef,DirectionalLightHelper,0.5,'white')
 
   return(
     <>
-    <directionalLight position={[-3,1,2]} intensity={0.5} ref={directionalLightRef}/>
+    <directionalLight position={[-1,1,2]} intensity={3.9} ref={directionalLightRef}
+   color={'#db2121'}
+    />
          <ambientLight intensity={0.1}/>
  
        {/* <group position={[0,-1,0]}>
@@ -91,7 +119,7 @@ const Scene = ()=>{
          
          {/* <Sphere position={[0,0,0]} size={[1,30,30]}/> */}
          {/* <Torus position={[2,0,0]} size={[0.8,0.2,30,30]} color={'blue'}/> */}
-         <TorusKnot position={[0,0,0]} size={[1,0.1,1000,50]} color={'yellow'}/>
+         <TorusKnot position={[0,0,0]} size={[0.1,1000,50]} color={'yellow'}/>
          <OrbitControls enableZoom={false}/>
    </>
   )
